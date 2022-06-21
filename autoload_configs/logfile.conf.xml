@@ -1,0 +1,17 @@
+<configuration name="logfile.conf">
+  <settings>
+    <param name="rotate-on-hup" value="true" />
+  </settings>
+  <profiles>
+    <profile name="default">
+      <settings>
+        <!-- <param name="logfile" value="$${logfile_path}" /> -->
+        <param name="logfile" value="C:\Users\vaisa\qualvoice\logs\qv-core\fs.log" />
+        <param name="rollover" value="10485760" />
+      </settings>
+      <mappings>
+        <map name="all" value="debug,info,notice,warning,err,crit,alert" />
+      </mappings>
+    </profile>
+  </profiles>
+</configuration>

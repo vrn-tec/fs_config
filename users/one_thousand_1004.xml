@@ -1,0 +1,16 @@
+<include>
+  <user id="one_thousand" number-alias="1004">
+    <params>
+      <param name="password" value="123456" />
+      <param name="vm-password" value="123456" />
+    </params>
+    <variables>
+      <variable name='accountcode' value='' />
+      <variable name='user_context' value='default' />
+      <variable name='outbound_caller_id_name' value='namedQv' />
+      <variable name='outbound_caller_id_number' value='0000001000' />
+      <variable name='directory_full_name' value='namedQv' />
+      <variable name='callgroup' value='operators' />
+    </variables>
+  </user>
+</include>

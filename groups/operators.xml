@@ -1,0 +1,7 @@
+<include>
+  <group name="operators">
+    <users>
+      <user id="1000" type="pointer"/>
+    </users>
+  </group>
+</include>

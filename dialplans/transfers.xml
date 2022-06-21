@@ -1,0 +1,11 @@
+<extension name="transfers">
+  <condition field="destination_number" expression="^$${transfer_prefix}7([0-9]{$${extn_length}})$">
+    <action application="set" data="dialed_extension=$1"/>
+    <action application="set" data="dialed_user=$1@$${domain_name}"/>
+    <action application="set" data="ringback=$${uk-ring}"/>
+    <action application="set" data="transfer_ringback=$${uk-ring}"/>
+    <!-- 30 -->
+    <action application="set" data="call_timeout=10"/>
+    <action application="transfer" data="${dialed_extension} XML default"/>
+  </condition>
+</extension>

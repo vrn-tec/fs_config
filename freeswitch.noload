@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<document type="freeswitch/xml">
+  <X-PRE-PROCESS cmd="include" data="user_vars.xml" />
+  <X-PRE-PROCESS cmd="include" data="vars.xml" />
+  <section name="configuration">
+
+    <configuration name="switch.conf">
+      <settings>
+        <param name="colorize-console" value="true" />
+        <param name="max-sessions" value="1000" />
+        <param name="sessions-per-second" value="30" />
+        <param name="loglevel" value="debug" />
+      </settings>
+    </configuration>
+
+    <configuration name="modules.conf">
+      <modules>
+        <load module="mod_console" />
+        <load module="mod_logfile" />
+        <load module="mod_event_socket" />
+        <load module="mod_sofia" />
+        <load module="mod_hash"/>
+        <load module="mod_dialplan_xml" />
+        <load module="mod_dptools" />
+        <load module="mod_valet_parking"/>
+        <load module="mod_flite" />
+        <load module="mod_commands" />
+        <load module="mod_conference" />
+        <load module="mod_expr" />
+        <load module="mod_sndfile" />
+        <load module="mod_cdr_csv" />
+        <load module="mod_voicemail" />
+        <!-- Codec Interfaces -->
+        <load module="mod_spandsp"/>
+        <load module="mod_g723_1"/>
+        <load module="mod_g729"/>
+        <load module="mod_amr"/>
+        <load module="mod_ilbc"/>
+        <load module="mod_h26x"/>
+        <load module="mod_b64"/>
+        <load module="mod_siren"/>
+        <load module="mod_isac"/>
+        <load module="mod_opus"/>
+        <load module="mod_local_stream"/>
+        <load module="mod_say_en"/>
+      </modules>
+    </configuration>
+
+    <configuration name="sofia.conf" description="sofia Endpoint">
+      <global_settings>
+        <param name="log-level" value="0"/>
+        <param name="debug-presence" value="0"/>
+        <param name="user-agent-string" value="QualVoice"/>
+      </global_settings>
+      <profiles>
+        <profile name="internal">
+          <aliases>
+          </aliases>
+          <!-- Outbound Registrations -->
+          <gateways>
+            <X-NO-PRE-PROCESS cmd="include" data="gateways/*.xml"/>
+          </gateways>
+
+          <domains>
+            <domain name="all" alias="true" parse="false"/>
+          </domains>
+
+          <settings>
+            <param name="user-agent-string" value="QualVoice"/>
+            <param name="multiple-registrations" value="true"/>
+            <param name="max-registrations-per-extension" value="99"/>
+          </settings>
+        </profile>
+      </profiles>
+    </configuration>
+
+    <configuration name="console.conf">
+      <mappings>
+        <map name="all" value="console,debug,info,notice,warning,err,crit,alert" />
+      </mappings>
+      <settings>
+        <param name="colorize" value="true" />
+        <param name="loglevel" value="info" />
+      </settings>
+    </configuration>
+
+    <configuration name="logfile.conf">
+      <settings>
+        <param name="rotate-on-hup" value="true" />
+      </settings>
+      <profiles>
+        <profile name="default">
+          <settings>
+            <param name="logfile" value="C:\Users\vaisa\logs\qualvoice\qualvoice.log" />
+            <param name="rollover" value="10485760" />
+          </settings>
+          <mappings>
+            <map name="all" value="debug,info,notice,warning,err,crit,alert" />
+          </mappings>
+        </profile>
+      </profiles>
+    </configuration>
+
+    <configuration name="event_socket.conf">
+      <settings>
+        <param name="listen-ip" value="127.0.0.1" />
+        <param name="listen-port" value="8021" />
+        <param name="password" value="#QualVoice@2021" />
+      </settings>
+    </configuration>
+
+    <configuration name="cdr_csv.conf">
+      <settings>
+        <param name="log-base" value="C:\Users\vaisa\logs\qualvoice"/>
+        <param name="default-template" value="reportcsv" />
+        <param name="rotate-on-hup" value="true" />
+        <param name="legs" value="a" />
+        <param name="master-file-only" value="true" />
+      </settings>
+      <templates>
+        <template name="reportcsv">"${caller_id_name}","${caller_id_number}","${destination_number}","${context}","${start_stamp}","${answer_stamp}","${end_stamp}","${duration}","${billsec}","${hangup_cause}","${uuid}","${bleg_uuid}","${accountcode}","${read_codec}","${write_codec}"</template>
+      </templates>
+    </configuration>
+
+    <configuration name="sofia.conf">
+      <global_settings>
+        <param name="log-level" value="0" />
+        <param name="debug-presence" value="0" />
+      </global_settings>
+      <profiles>
+        <!-- <profile name="local">
+          <domains>
+            <domain name="all" alias="true" parse="false" />
+          </domains>
+          <settings>
+            <param name="context" value="local" />
+            <param name="sip-port" value="5060" />
+            <param name="dialplan" value="XML" />
+            <param name="rtp-ip" value="$${machine_ip}" />
+            <param name="sip-ip" value="$${machine_ip}" />
+            <param name="auth-calls" value="false" />
+          </settings>
+          <gateways></gateways>
+        </profile> -->
+        <X-PRE-PROCESS cmd="include" data="sip_profiles/*.xml"/>
+      </profiles>
+    </configuration>
+
+    <configuration name="conference.conf" description="Audio Conference">
+      <!-- Advertise certain presence on startup . -->
+      <advertise>
+        <room name="3001@$${domain}" status="QualVoice"/>
+      </advertise>
+
+      <caller-controls>
+        <group name="default">
+          <control action="mute" digits="0"/>
+          <control action="deaf mute" digits="*"/>
+          <control action="energy up" digits="9"/>
+          <control action="energy equ" digits="8"/>
+          <control action="energy dn" digits="7"/>
+          <control action="vol talk up" digits="3"/>
+          <control action="vol talk zero" digits="2"/>
+          <control action="vol talk dn" digits="1"/>
+          <control action="vol listen up" digits="6"/>
+          <control action="vol listen zero" digits="5"/>
+          <control action="vol listen dn" digits="4"/>
+          <control action="hangup" digits="#"/>
+        </group>
+        <group name="plain">
+          <control action="mute" digits="0"/>
+          <control action="energy up" digits="9"/>
+          <control action="energy equ" digits="8"/>
+          <control action="energy dn" digits="7"/>
+          <control action="vol talk up" digits="3"/>
+          <control action="vol talk zero" digits="2"/>
+          <control action="vol talk dn" digits="1"/>
+          <control action="vol listen up" digits="6"/>
+          <control action="vol listen zero" digits="5"/>
+          <control action="vol listen dn" digits="4"/>
+        </group>
+      </caller-controls>
+
+      <profiles>
+        <profile name="simple">
+          <param name="domain" value="$${domain}"/>
+          <param name="rate" value="16000"/>
+          <param name="interval" value="10"/>
+          <param name="energy-level" value="300"/>
+          <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/>
+          <param name="muted-sound" value="conference/conf-muted.wav"/>
+          <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+          <param name="alone-sound" value="conference/conf-alone.wav"/>
+          <param name="moh-sound" value="$${hold_music}"/>
+          <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+          <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+          <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+          <param name="locked-sound" value="conference/conf-locked.wav"/>
+          <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+          <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+          <param name="pin-sound" value="conference/conf-pin.wav"/>
+          <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+          <param name="caller-id-name" value="$${outbound_caller_name}"/>
+          <param name="caller-id-number" value="$${outbound_caller_id}"/>
+          <param name="caller-controls" value="plain"/>
+          <param name="comfort-noise" value="true"/>
+        </profile>
+      </profiles>
+
+    </configuration>
+
+    <configuration name="ivr.conf" description="IVR menus">
+      <menus>
+        <X-PRE-PROCESS cmd="include" data="ivr.xml"/>
+      </menus>
+    </configuration>
+
+    <configuration name="local_stream.conf" description="stream files from local dir">
+      <!-- fallback to default if requested moh class isn't found -->
+      <directory name="default" path="$${sounds_dir}/music/8000">
+        <param name="rate" value="8000"/>
+        <param name="shuffle" value="false"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+        <!-- list of short files to break in with every so often -->
+        <!--<param name="chime-list" value="file1.wav,file2.wav"/>-->
+        <!-- frequency of break-in (seconds)-->
+        <!--<param name="chime-freq" value="30"/>-->
+        <!-- limit to how many seconds the file will play -->
+        <!--<param name="chime-max" value="500"/>-->
+      </directory>
+
+      <!-- <directory name="moh/8000" path="$${sounds_dir}/music/8000">
+        <param name="rate" value="8000"/>
+        <param name="shuffle" value="true"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+      </directory> -->
+    </configuration>
+
+    <X-PRE-PROCESS cmd="include" data="opus.xml" />
+    <X-PRE-PROCESS cmd="include" data="voicemail.xml" />
+  </section>
+
+  <section name="dialplan">
+    <context name="default">
+
+      <extension name="eslserver">
+        <condition field="destination_number" expression="^9999$">
+          <action application="log" data="INFO call intercepted"/>
+          <action application="socket" data="127.0.0.1:8085 async full"/>
+        </condition>
+      </extension>
+      <extension name="conference_service">
+        <condition field="destination_number" expression="^8090$">
+          <action application="log" data="INFO Call to conferencing"/>
+          <action application="socket" data="127.0.0.1:8090 async full"/>
+        </condition>
+      </extension>
+      <X-PRE-PROCESS cmd="include" data="dialplans/*.xml" />
+
+
+    </context>
+  </section>
+
+  <section name="directory">
+    <domain name="$${machine_ip}">
+
+      <params>
+        <param name="dial-string" value="{^^:sip_invite_domain=${dialed_domain}:presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}" />
+      </params>
+
+      <groups>
+
+        <group name="default">
+          <users>
+            <X-PRE-PROCESS cmd="include" data="users/*.xml"/>
+          </users>
+        </group>
+
+        <X-PRE-PROCESS cmd="include" data="groups/*.xml" />
+        <!-- <group name="sales">
+          <users>
+            <user id="1000" type="pointer" />
+          </users>
+        </group> -->
+      </groups>
+
+      <!-- <X-NO-PRE-PROCESS cmd="include" data="groups.xml" /> -->
+    </domain>
+  </section>
+
+</document>

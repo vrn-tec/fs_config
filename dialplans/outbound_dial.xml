@@ -1,0 +1,7 @@
+<extension name="outbound_dial">
+  <condition field="destination_number" expression="^$${dial_pstn_prefix}(\d+)$">
+    <action application="set" data="target_number=$1" inline="true"/>
+    <!-- <action application="socket" data="127.0.0.1:$${outbound_dialer_port} async full"/> -->
+    <action application="bridge" data="sofia/gateway/audiocodes/$1"/>
+  </condition>
+</extension>

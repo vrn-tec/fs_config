@@ -1,0 +1,60 @@
+<include>
+  <extension name:"Simple add-caller conf: member">
+    <condition field="destination_number" expression="^($${conf_prefix}\d{2})$">
+      <action application="answer"/>
+      <action application="conference" data="$1@simple"/>
+    </condition>
+  </extension>
+
+  <extension name="Simple add-caller conf: moderator">
+    <condition field="destination_number" expression="^\*($${conf_prefix}\d{2}$)">
+      <action application="answer"/>
+      <!-- set up a few bind_digit_action (BDA) bindings for the moderator -->
+      <action application="bind_digit_action" data="moderator,*1,exec:execute_extension,ASK_FOR_NUMBER__$1 XML default"/>
+      <action application="bind_digit_action" data="moderator,*2,exec:execute_extension,CANCEL_LAST_CALL__$1 XML default"/>
+      <action application="digit_action_set_realm" data="moderator"/>
+      <action application="conference" data="$1@simple+flags{moderator}"/>
+    </condition>
+  </extension>
+
+  <extension name="Add new OB call to conference">
+    <condition field="destination_number" expression="^ASK_FOR_NUMBER__(\d+)$">
+      <!-- ask caller for a number + #, collect into ${target_num} variable -->
+      <action application="play_and_get_digits" data="4 11 1 5000 # ivr/ivr-enter_destination_telephone_number.wav ivr/ivr-that_was_an_invalid_entry.wav target_num \d+"/>
+      <!-- add this call to the conference -->
+      <action application="execute_extension" data="ADD_CALL_TO_CONF__${target_num}"/>
+    </condition>
+  </extension>
+
+  <extension name="Remove last OB call added to conference">
+    <condition field="destination_number" expression="^CANCEL_LAST_CALL__(\d+)$">
+      <!-- remove a call from the conference -->
+      <action application="play_and_get_digits" data="4 11 1 5000 # ivr/ivr-enter_destination_telephone_number.wav ivr/ivr-that_was_an_invalid_entry.wav target_num \d+"/>
+      <action application="set" data="res=${uuid_kill ${hash(select/domain-${domain_name}/last_user_${target_num})}}"/>
+    </condition>
+  </extension>
+
+  <extension name="add that call">
+    <!-- if we have a four-digit number then attempt to dial it as a user ... -->
+    <condition field="destination_number" expression="^ADD_CALL_TO_CONF__(\d{4})$" break="on-true">
+      <action application="set" data="new_uuid=${create_uuid key}" inline="true"/>
+      <action application="hash" data="insert/domain-${domain_name}/last_user_$1/${new_uuid}" />
+      <action application="set" data="res=${bgapi originate {origination_uuid=${new_uuid}}user/$1 &conference(${conference_name})}"/>
+    </condition>
+    <!-- if we have a five+ digit number then attempt to dial it as a gw connection ... -->
+    <condition field="destination_number" expression="^ADD_CALL_TO_CONF__(\d{5})$" break="on-true">
+      <action application="set" data="new_uuid=${create_uuid key}" inline="true"/>
+      <action application="hash" data="insert/domain-${domain_name}/last_user_$1/${new_uuid}" />
+      <action application="set" data="res=${bgapi originate {origination_uuid=${new_uuid}}sofia/gateway/mygw/$1 &conference(${conference_name})}"/>
+      <!-- Alternatively, you can just use loopback, but that creates three call legs instead of one, so be warned -->
+      <!--
+        <action application="set" data="res=${bgapi originate {origination_uuid=${new_uuid}}loopback/$1 &conference(${conference_name})}"/>
+      -->
+    </condition>
+    <!-- ... otherwise inform moderator that the operation was not exactly successful -->
+    <condition field="destination_number" expression="^ADD_CALL_TO_CONF__$">
+      <action application="playback" data="ivr/ivr-please_check_number_try_again.wav"/>
+    </condition>
+  </extension>
+
+</include>

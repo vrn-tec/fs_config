@@ -1,0 +1,14 @@
+<include>
+  <menu name="inbound_ivr"
+  greet-long="ivr/ivr-welcome.wav"
+  invalid-sound="ivr/ivr-that_was_an_invalid_entry.wav"
+  exit-sound="voicemail/vm-goodbye.wav"
+  confirm-attempts="3"
+  timeout="10000"
+  inter-digit-timeout="2000"
+  max-failures="3"
+  max-timeouts="3"
+  digit-len="$${extn_length}">
+  <entry action="menu-exec-app" digits="/^(/d{extn_length})$/" param="bridge user/$1@$${domain_name}"/>
+  </menu>
+</include>

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<document type="freeswitch/xml">
+
+  <X-NO-PRE-PROCESS cmd="include" data="user_vars.xml" />
+
+  <!-- <section name="vars"> -->
+  <X-PRE-PROCESS cmd="include" data="vars.xml" />
+
+
+
+  <!-- </section> -->
+
+  <section name="configuration" description="Configuration Settings">
+
+
+    <X-PRE-PROCESS cmd="include" data="autoload_configs/*.xml"/>
+  </section>
+
+  <section name="dialplan">
+    <context name="default">
+
+      <!-- <extension name="all">
+        <condition field="destination_number" expression="^.*$">
+          <action application="socket" data="127.0.0.1:8084 async full"/>
+        </condition>
+      </extension> -->
+
+      <!-- <extension name="vm_listen">
+        <condition field="destination_number" expression="^$${vm_listener_number}$">
+          <action application="socket" data="127.0.0.1:$${vm_listener_port} async full"/>
+        </condition>
+      </extension> -->
+
+      <extension name="pbx_extension">
+        <condition field="destination_number" expression="^97126348683$">
+          <action application="set" data="hangup_after_bridge=false"/>
+          <action application="bridge" data="user/1000"/>
+        </condition>
+      </extension>
+
+      <extension name="outbound_dial">
+        <condition field="destination_number" expression="^9(\d+)$">
+          <action application="set" data="target_number=$1" inline="true"/>
+          <!-- <action application="socket" data="127.0.0.1:$${outbound_dialer_port} async full"/> -->
+          <action application="bridge" data="sofia/gateway/audiocodes/$1"/>
+        </condition>
+      </extension>
+
+      <X-NO-PRE-PROCESS cmd="include" data="dialplans/*.xml" />
+    </context>
+  </section>
+
+  <X-NO-PRE-PROCESS cmd="exec" data="wget -qO - http://localhost:8096/api/v1/directory"/>
+
+  <section name="directory">
+    <domain name="$${domain}">
+
+
+      <params>
+        <param name="dial-string" value="{^^:sip_invite_domain=${dialed_domain}:presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}" />
+      </params>
+
+      <groups>
+
+        <group name="default">
+          <users>
+            <X-PRE-PROCESS cmd="include" data="users/*.xml"/>
+          </users>
+        </group>
+
+        <X-PRE-PROCESS cmd="include" data="groups/*.xml" />
+      </groups>
+    </domain>
+  </section>
+
+
+  <section name="languages" description="Language Management">
+
+    <X-NO-PRE-PROCESS cmd="include" data="lang/en/en.xml"/>
+
+  </section>
+
+</document>

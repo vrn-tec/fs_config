@@ -1,0 +1,6 @@
+<gateway name="audiocodes">
+  <param name="username" value="x"/>
+  <param name="password" value="x"/>
+  <param name="register" value="false"/>
+  <param name="realm" value="192.168.0.190"/>
+</gateway>

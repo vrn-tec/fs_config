@@ -1,0 +1,5 @@
+<include>
+  <X-PRE-PROCESS cmd="set" data="enter_destination_telephone_number=ivr/ivr-enter_destination_telephone_number.wav"/>
+  <X-PRE-PROCESS cmd="set" data="invalid_entry=ivr/ivr-that_was_an_invalid_entry.wav"/>
+  <X-PRE-PROCESS cmd="set" data="check_number_and_try_again=ivr/ivr-please_check_number_try_again.wav"/>
+</include>

@@ -1,0 +1,12 @@
+<configuration name="cdr_csv.conf">
+  <settings>
+    <param name="log-base" value="C:\Users\vaisa\logs\qualvoice"/>
+    <param name="default-template" value="reportcsv" />
+    <param name="rotate-on-hup" value="true" />
+    <param name="legs" value="a" />
+    <param name="master-file-only" value="true" />
+  </settings>
+  <templates>
+    <template name="reportcsv">"${caller_id_name}","${caller_id_number}","${destination_number}","${context}","${start_stamp}","${answer_stamp}","${end_stamp}","${duration}","${billsec}","${hangup_cause}","${uuid}","${bleg_uuid}","${accountcode}","${read_codec}","${write_codec}"</template>
+  </templates>
+</configuration>

@@ -1,0 +1,21 @@
+<include>
+  <user id="1002">
+    <params>
+      <param name="password" value="123456" />
+      <param name="vm-password" value="123456" />
+    </params>
+    <variables>
+      <variable name="toll_allow" value="local" />
+      <variable name="accountcode" value="" />
+      <variable name="user_context" value="default" />
+      <variable name="effective_caller_id_name" value="Test Caller Name" />
+      <variable name="effective_caller_id_number" value="1234567890" />
+      <variable name="outbound_caller_id_name" value="Test Caller Name" />
+      <variable name="outbound_caller_id_number" value="1234567890" />
+      <variable name="directory_full_name" value="Test user" />
+      <variable name="callgroup" value="default" />
+      <variable name="fallback_route" value="voicemail" />
+      <variable name="mid" value="613f4c889c560d4c34bbc26e" />
+    </variables>
+  </user>
+</include>

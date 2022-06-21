@@ -1,0 +1,50 @@
+﻿<include>
+    <X-PRE-PROCESS cmd="set" data="machine_ip=192.168.0.154"/>
+    <X-PRE-PROCESS cmd="set" data="default_password=123456"/>
+    <X-PRE-PROCESS cmd="set" data="ringback=$${uk-ring}" />
+    <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${uk-ring}" />
+    <X-PRE-PROCESS cmd="set" data="default_areacode=2"/>
+    <X-PRE-PROCESS cmd="set" data="default_country=AE"/>
+    <X-PRE-PROCESS cmd="set" data="default_countrycode=971" />
+    <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Test QV"/>
+    <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>
+    <!-- Extension variables -->
+    <X-PRE-PROCESS cmd="set" data="extn_length=4"/>
+    <X-PRE-PROCESS cmd="set" data="operator_extn=1000"/>
+    <X-PRE-PROCESS cmd="set" data="ring_timeout=30"/>
+    <X-PRE-PROCESS cmd="set" data="vm_rec_dir=/usr/local/qualvoice/vm-recordings"/>
+    <X-PRE-PROCESS cmd="set" data="prompts_dir=/usr/local/qualvoice/prompts"/>
+    <X-PRE-PROCESS cmd="set" data="pilot_number_prefix=971370"/>
+    <!-- Internal SIP Profile -->
+    <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true"/>
+    <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060"/>
+    <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061"/>
+    <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false"/>
+
+    <!-- External SIP Profile -->
+    <X-PRE-PROCESS cmd="set" data="external_auth_calls=false"/>
+    <X-PRE-PROCESS cmd="set" data="external_sip_port=5080"/>
+    <X-PRE-PROCESS cmd="set" data="external_tls_port=5081"/>
+    <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false"/>
+
+    <!-- Misc -->
+    <X-PRE-PROCESS cmd="set" data="logfile_path=C:\Users\vaisa\logs\qualvoice\qualvoice.log"/>
+    <X-PRE-PROCESS cmd="set" data="call_timeout=10"/>
+
+    <!-- ports -->
+    <X-PRE-PROCESS cmd="set" data="auto_attendant_port=8090"/>
+    <X-PRE-PROCESS cmd="set" data="vm_recorder_port=8091"/>
+    <X-PRE-PROCESS cmd="set" data="vm_listener_port=8092"/>
+    <X-PRE-PROCESS cmd="set" data="outbound_dialer_port=8093"/>
+
+    <!-- Feature Codes -->
+    <X-PRE-PROCESS cmd="set" data="auto_attendant_number=8090"/>
+    <X-PRE-PROCESS cmd="set" data="conf_prefix=86"/>
+    <X-PRE-PROCESS cmd="set" data="valet_park_prefix=61"/>
+    <X-PRE-PROCESS cmd="set" data="parking_number=6100"/>
+    <X-PRE-PROCESS cmd="set" data="valet_park_start=6101"/>
+    <X-PRE-PROCESS cmd="set" data="valet_park_end=6199"/>
+    <X-PRE-PROCESS cmd="set" data="dial_pstn_prefix=9"/>
+    <X-PRE-PROCESS cmd="set" data="transfer_prefix=#87"/>
+    <X-PRE-PROCESS cmd="set" data="vm_listener_number=8092"/>
+</include>

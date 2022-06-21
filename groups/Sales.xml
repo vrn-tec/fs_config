@@ -1,0 +1,8 @@
+<include>
+  <group name="Sales">
+    <users>
+      <user id="1003" type="pointer"/>
+      <user id="1002" type="pointer"/>
+    </users>
+  </group>
+</include>

@@ -1,0 +1,20 @@
+<extension name="pbx_extension">
+  <action application="log" data="INFO in Internal~!!!"/>
+  <!-- <condition field="destination_number" expression="^([0-9]{$${extn_length}})$"> -->
+  <condition field="destination_number" expression="^([0-9]{$${extn_length}})$">
+    <!-- This will dial a registered phone at the ip or domain name you set in the globals section -->
+    <!-- (The % indicates it is an internal extension)                                             -->
+    <action application="bind_meta_app" data="1 ab s valet_park::valet_lot auto in $${valet_park_start} $${valet_park_end}"/>
+    <action application="set" data="dialed_extension=$1"/>
+    <action application="set" data="dialed_user=$1@$${domain_name}"/>
+    <action application="set" data="ringback=$${uk-ring}"/>
+    <action application="set" data="transfer_ringback=$${uk-ring}"/>
+    <!-- 30 -->
+    <action application="set" data="call_timeout=20"/>
+    <action application="set" data="hangup_after_bridge=false"/>
+    <action application="set" data="continue_on_fail=true"/>
+    <action application="bridge" data="user/${dialed_user}"/>
+    <action application="execute_extension" data="local_ext_failure"/>
+    <!-- <action application="hangup" data="NO_ANSWER"/> -->
+  </condition>
+</extension>

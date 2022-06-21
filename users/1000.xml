@@ -1,0 +1,18 @@
+<include>
+  <user id="1000">
+    <params>
+      <param name="password" value="123456" />
+      <param name="vm-password" value="123456" />
+    </params>
+    <variables>
+      <variable name="accountcode" value="" />
+      <variable name="user_context" value="default" />
+      <variable name="outbound_caller_id_name" value="iphone" />
+      <variable name="outbound_caller_id_number" value="0000001000" />
+      <variable name="directory_full_name" value="iphone" />
+      <variable name="callgroup" value="operators" />
+      <variable name="fallback_route" value="voicemail" />
+      <variable name="fallback_route_value" value="" />
+    </variables>
+  </user>
+</include>

@@ -1,0 +1,16 @@
+<extension name="vm_recorder">
+  <condition field="destination_number" expression="^VOICEMAIL_RECORDER__(\d+)$">
+    <!-- <condition field="destination_number" expression="^8091(\d+)$"> -->
+    <action application="log" data="INFO Call to voicemail"/>
+    <action application="set" data="target_ext=$1" inline="true"/>
+    <action application="log" data="INFO target_ext=$1"/>
+    <action application="socket" data="127.0.0.1:$${vm_recorder_port} async full"/>
+  </condition>
+</extension>
+
+<extension name="record_it">
+  <condition field="destnation_number" expression="^RECORD_IT__(\w?\:?\\?[\w\-_\\\\.]*)$">
+    <action application="log" data="INFO Recording extn $1"/>
+    <action application="record" data="$1 20 200 3"/>
+  </condition>
+</extension>

@@ -1,0 +1,36 @@
+<include>
+  <extension name="local_extension_failure">
+    <condition field="destination_number" expression="^local_ext_failure$" break="on-false">
+      <action application="set" inline="true" data="fallback_route=${user_data(${dialed_user} var fallback_route)}"/>
+      <action application="set" inline="true" data="fallback_route_value=${user_data(${dialed_user} var fallback_route_value)}"/>
+    </condition>
+
+    <condition field="${fallback_route}" expression="^voicemail$" break="on-true">
+      <action application="answer"/>
+      <action application="sleep" data="1000"/>
+      <!-- <action application="voicemail" data="default ${domain_name} ${dialed_extension}"/> -->
+      <action application="execute_extension" data="VOICEMAIL_RECORDER__${dialed_user}"/>
+    </condition>
+
+    <condition field="${fallback_route}" expression="^extension$" break="on-true">
+      <action application="answer"/>
+      <action application="sleep" data="1000"/>
+      <!-- <action application="voicemail" data="default ${domain_name} ${dialed_extension}"/> -->
+      <action application="transfer" data="${fallback_route_value} XML default"/>
+    </condition>
+
+    <!-- TODO -->
+    <condition field="${fallback_route}" expression="^external$" break="on-true">
+      <action application="answer"/>
+      <action application="sleep" data="1000"/>
+      <!-- <action application="voicemail" data="default ${domain_name} ${dialed_extension}"/> -->
+      <action application="transfer" data="${fallback_route_value} XML default"/>
+    </condition>
+
+    <!-- transfer DEST CONTEXT -->
+    <!-- <condition field="${fallback_route}" expression="^transfer\s+(\S+)\s+(\S+)$" break="on-true">
+      <action application="set" data="outbound_caller_id_number=${caller_id_number}"/>
+      <action application="transfer" data="$1 XML $2"/>
+    </condition> -->
+  </extension>
+</include>

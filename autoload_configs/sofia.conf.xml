@@ -1,0 +1,51 @@
+<configuration name="sofia.conf" description="sofia Endpoint">
+  <global_settings>
+    <param name="log-level" value="0"/>
+    <param name="debug-presence" value="0"/>
+    <param name="user-agent-string" value="QualVoice"/>
+  </global_settings>
+  <profiles>
+    <profile name="internal">
+      <aliases>
+      </aliases>
+      <!-- Outbound Registrations -->
+      <gateways>
+        <X-PRE-PROCESS cmd="include" data="../sip_profiles/gateways/*.xml"/>
+        <X-NO-PRE-PROCESS cmd="exec" data="wget -qO - http://localhost:8096/api/v1/gateway/xml"/>
+      </gateways>
+
+      <domains>
+        <domain name="all" alias="true" parse="false"/>
+      </domains>
+
+      <settings>
+        <param name="user-agent-string" value="QualVoice"/>
+        <param name="multiple-registrations" value="true"/>
+        <param name="max-registrations-per-extension" value="99"/>
+        <param name="sip-trace" value="no"/>
+        <param name="sip-capture" value="no"/>
+        <param name="sip-port" value="$${internal_sip_port}"/>
+        <!-- <param name="dialplan" value="XML"/> -->
+        <param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
+        <param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
+        <param name="rtp-ip" value="$${local_ip_v4}"/>
+        <param name="sip-ip" value="$${local_ip_v4}"/>
+        <param name="hold-music" value="$${hold_music}"/>
+        <param name="tls" value="$${internal_ssl_enable}"/>
+        <param name="tls-only" value="false"/>
+        <param name="tls-bind-params" value="transport=tls"/>
+        <param name="tls-sip-port" value="$${internal_tls_port}"/>
+        <param name="nonce-ttl" value="60"/>
+        <!-- <param name="auth-calls" value="$${internal_auth_calls}"/> -->
+        <param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
+        <param name="ext-sip-ip" value="$${external_sip_ip}"/>
+        <param name="media-timeout-sec" value="300"/>
+        <param name="media-hold-timeout-sec" value="1800"/>
+        <param name="ws-binding" value=":5066"/>
+        <param name="wss-binding" value=":7443"/>
+        <param name="rfc2833-pt" value="101"/>
+        <param name="dtmf-duration" value="2000"/>
+      </settings>
+    </profile>
+  </profiles>
+</configuration>
